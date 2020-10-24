@@ -1,3 +1,14 @@
+# Imports the  needed errors.
+from errors import \
+    ValueTooLargeError,     \
+    ValueTooSmallError,     \
+    ExpectsIntError,        \
+    ExpectsStringError,     \
+    HexStringTooShortError, \
+    HexStringTooLongError,  \
+    HexStringFormatError
+
+
 class RGB:
     """
         Type model to define an RGB data type.
@@ -10,7 +21,7 @@ class RGB:
     """
 
     def __init__(self, red: int, green: int, blue: int):
-        #_DataValidation.checkRGBData(red, green, blue) # Validates Parameters
+        _DataValidation.checkRGBData(red, green, blue) # Validates Parameters
 
         self.red = red
         self.green = green
@@ -70,7 +81,7 @@ class RGB:
         # Validates [hex_code].
         #
         # Checks if it has the right format, size and type.
-        #_DataValidation.checkHexString(hexString=hex_code)
+        _DataValidation.checkHexString(hexString=hex_code)
 
         # Splits [hex_code] apart using [_splitHexCode].
         hex_parts = RGB._splitHexCode(hex_code)
@@ -100,3 +111,110 @@ class RGB:
             hex_part += modified_hex_code[i]  # Add value from i to hex_part to combine 2 values
 
         return hex_parts
+
+
+class _DataValidation:
+
+    def __init__(self):
+        pass
+
+    # Staticmethod because it doesn't needs self (class object/instance)
+    @staticmethod
+    def checkRGBData(red, green, blue):
+        """
+            Checks Data for the right types + sizes and raises Errors accordingly
+        """
+
+        # List with tuples containing the parameter name and value:
+        #
+        # Example:
+        # tuple = ('exampleClass', exampleClass)
+        #           ^^^^^^^^^^^^   ^^^^^^^^^^^^
+        #               name           value
+        #
+        initialisationDataList = [
+            ('red', red),
+            ('green', green),
+            ('blue', blue)
+        ]
+
+        # Holds the index where you can find the name of the tuples in [initialisationDataList]
+        name = 0
+
+        # Holds the index where you can find the value of the tuples in [initialisationDataList]
+        value = 1
+
+        # ---------------Type checking---------------
+
+        # Loops through [initialisationDataList] and checks if type is not an integer.
+        for initialisationData in initialisationDataList:
+            # Checks if type of [initialisationData] is not an integer.
+            if type(initialisationData[value]) is not int:
+                # Raises [ExpectsIntError]  if type isn't an integer.
+                raise ExpectsIntError(
+                    errorCausingVariableName=initialisationData[name],
+                    errorCausingVariableValue=initialisationData[value]
+                )
+
+        # ---------------Size checking---------------
+
+        # Loops through [initialisationDataList] and checks if integer value is bigger than 255.
+        for initialisationData in initialisationDataList:
+            # Checks if [initialisationData] integer value is bigger than 255.
+            if initialisationData[value] > 255:
+                # Raises [ValueTooLargeError] if integer is bigger than 255.
+                raise ValueTooLargeError(
+                    errorCausingVariableName=initialisationData[name],
+                    errorCausingVariableValue=initialisationData[value],
+                    maximumValue=255
+                )
+
+        # Loops through [initialisationDataList] and checks if integer value is smaller than 0.
+        for initialisationData in initialisationDataList:
+            # Checks if [initialisationData] integer value is smaller than 0.
+            if initialisationData[value] < 0:
+                # Raises [ValueTooSmallError] if integer is smaller than 0.
+                raise ValueTooSmallError(
+                    errorCausingVariableName=initialisationData[name],
+                    errorCausingVariableValue=initialisationData[value],
+                    minimumValue=0
+                )
+
+    # Staticmethod because it doesn't needs self (class object/instance)
+    @staticmethod
+    def checkHexString(hexString):
+        # Checks if [hexString] is not from type [str].
+        if type(hexString) != str:
+            # Raises [ExpectsStringError] if [hexString] isn't an string.
+            raise ExpectsStringError(
+                errorCausingVariableName='hexString',
+                errorCausingVariableValue=hexString
+            )
+
+        # Checks if [hexString] has the right format:
+        #
+        # First two digits should be '0x'.
+        if hexString[0:2] != '0x':
+            # Raises [HexStringFormatError] if [hexString]s first two digits aren't '0x'.
+            raise HexStringFormatError(
+                errorCausingVariableName='hexString',
+                errorCausingVariableValue=hexString
+            )
+
+        # Checks if [hexString] length is shorter than 10.
+        if len(hexString) < 8:
+            # Raises [HexStringTooShortError] if [hexString] is shorter than 10.
+            raise HexStringTooShortError(
+                errorCausingVariableName='hexString',
+                errorCausingVariableValue=hexString,
+                minimumLength=8
+            )
+
+        # Checks if [hexString] length is longer than 10.
+        if len(hexString) > 8:
+            # Raises [HexStringTooLongError] if [hexString] is longer than 10.
+            raise HexStringTooLongError(
+                errorCausingVariableName='hexString',
+                errorCausingVariableValue=hexString,
+                maximumLength=8
+            )
