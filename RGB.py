@@ -34,18 +34,20 @@ class RGB:
         return f"RGB({self.red}, {self.green}, {self.blue})"
 
     def toHex(self):
-        # Converts rgb_values into hex_code
-        #
-        # Takes rgb_values from Type RGB
-        #                                                           red  blue
-        #                                                            __  __
-        # Returns a 8 digit hex_code string as followed example: 0xfff44336
-        #                                                          ^^  ^^
-        #                                           fixed_alpha_value  green
-        # Digit 1 & 2 = fixed_alpha_value (255)
-        # Digit 3 & 4 = red_value
-        # Digit 5 & 6 = green_value
-        # Digit 7 & 8 = blue_value
+        """
+        Converts rgb_values into hex_code
+
+        Takes rgb_values from Type RGB
+                                                                  red  blue
+                                                                   __  __
+        Returns a 8 digit hex_code string as followed example: 0xfff44336
+                                                                 ^^  ^^
+                                                  fixed_alpha_value  green
+        Digit 1 & 2 = fixed_alpha_value (255)
+        Digit 3 & 4 = red_value
+        Digit 5 & 6 = green_value
+        Digit 7 & 8 = blue_value
+        """
 
         hex_parts = []  # List to store sub_hex_codes
         hex_code = "0x"  # Basis for final hex_code
@@ -63,20 +65,22 @@ class RGB:
 
     @staticmethod
     def toRGB(hex_code: str):
-        # Converts a hex_code to int_values from 0 to 255 and groups them as RGB Type
-        #
-        #                                                    red  blue
-        #                                                     __  __
-        # Takes a 8 digit hex_code string as followed example: 0xfff44336
-        #                                                   ^^  ^^
-        #                                    fixed_alpha_value  green
-        # Digit 1 & 2 = fixed_alpha_value (255)
-        # Digit 3 & 4 = red_value
-        # Digit 5 & 6 = green_value
-        # Digit 7 & 8 = blue_value
-        # Converts 2 digits into one int_value
-        # Excludes the first 2 digits from converting
-        # Returns rgb_values from Type RGB
+        """
+        Converts a hex_code to int_values from 0 to 255 and groups them as RGB Type
+
+                                                           red  blue
+                                                            __  __
+        Takes a 8 digit hex_code string as followed example: 0xfff44336
+                                                          ^^  ^^
+                                           fixed_alpha_value  green
+        Digit 1 & 2 = fixed_alpha_value (255)
+        Digit 3 & 4 = red_value
+        Digit 5 & 6 = green_value
+        Digit 7 & 8 = blue_value
+        Converts 2 digits into one int_value
+        Excludes the first 2 digits from converting
+        Returns rgb_values from Type RGB
+        """
 
         # Validates [hex_code].
         #
@@ -94,9 +98,11 @@ class RGB:
 
     @staticmethod
     def _splitHexCode(hex_code: str):
-        # Splits hex_code in sub hex codes
-        #
-        # Takes 6 digit hex_code string as followed example: 0xf44336
+        """
+        Splits hex_code in sub hex codes
+
+        Takes 6 digit hex_code string as followed example: 0xf44336
+        """
 
         modified_hex_code = hex_code[2:]  # Cut off "0x" from hex code
         hex_parts = []  # List to store sub_hex_codes
@@ -104,13 +110,20 @@ class RGB:
 
         for i in range(len(modified_hex_code)):
             # Check if i is not uneven, add hexPart to hexParts list and reset hexPart
-            if (i != 0 and not i % 2) or (i == len(modified_hex_code) - 1):
+            if i != 0 and not i % 2:
                 hex_parts.append(hex_part)
                 hex_part = "0x"
 
-            hex_part += modified_hex_code[i]  # Add value from i to hex_part to combine 2 values
+            # Checks if i is max value and returns the hex_parts.
+            if i == len(modified_hex_code) - 1:
+                # Add value from i to hex_part to combine 2 values
+                hex_part += modified_hex_code[i]
 
-        return hex_parts
+                hex_parts.append(hex_part)
+
+                return hex_parts
+
+            hex_part += modified_hex_code[i]  # Add value from i to hex_part to combine 2 values
 
 
 class _DataValidation:
@@ -118,7 +131,6 @@ class _DataValidation:
     def __init__(self):
         pass
 
-    # Staticmethod because it doesn't needs self (class object/instance)
     @staticmethod
     def checkRGBData(red, green, blue):
         """
